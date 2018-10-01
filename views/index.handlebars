@@ -1,0 +1,19 @@
+<div class="wrapper">
+    {{#each articles}}
+    <h2><a href="{{link}}">{{title}}</a></h2>
+    <p>{{summary}}</p>
+    <hr />
+    {{/each}}
+
+    <style>
+        a {
+            text-decoration: none;
+            color: black;
+        }
+
+        .wrapper {
+            padding: 20px 50px 20px 50px;
+            width: 50%;
+        }
+    </style>
+</div>

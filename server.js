@@ -1,4 +1,5 @@
 var express = require("express");
+var exphbs = require("express-handlebars");
 var mongoose = require("mongoose");
 var axios = require("axios");
 var cheerio = require("cheerio");
@@ -7,6 +8,9 @@ var bodyParser = require("body-parser");
 var app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
 
 var PORT = process.env.PORT || 8080;
 
@@ -45,13 +49,22 @@ app.get("/scrape", function (req, res) {
                 })
                 .catch(function (err) {
                     // If an error occurred, send it to the client
-                    return res.json(err);
+                    res.json(err);
                 });
 
         });
         res.send("Scrape Complete");
     });
 });
+
+app.get("/", function (req, res) {
+    db.Article.find({})
+        .then(function (dbArticle) {
+            console.log(dbArticle);
+            res.render("index", { articles: dbArticle });
+        })
+    // res.render("index", { something: "something" });
+})
 
 app.listen(PORT, function () {
     console.log("App running on port " + PORT + "!");
