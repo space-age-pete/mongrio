@@ -70,6 +70,16 @@ app.get("/", function (req, res) {
     // res.render("index", { something: "something" });
 })
 
+app.get("/comments/:id", function (req, res) {
+    db.Article.find({ _id: req.params.id })
+        .populate("comments")
+        .then(function (dbArticle) {
+            console.log(dbArticle);
+            res.json(dbArticle);
+        })
+    // res.render("index", { something: "something" });
+})
+
 app.post("/articles", function (req, res) {
     console.log("req.body: ", req.body.comment);
     db.Comment.create(req.body.comment)

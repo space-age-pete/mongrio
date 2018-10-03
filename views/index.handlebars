@@ -6,6 +6,7 @@
         <h2><a href="{{link}}">{{title}}</a></h2>
         <p>{{summary}}</p>
         <button class="commentButton" data-id="{{_id}}">Leave a Comment</button>
+        <button class="viewAllComments" data-id="{{_id}}">View Comments</button>
     </div>
     <br>
     {{/each}}
@@ -85,9 +86,42 @@
         })
             // With that done
             .then(function (data) {
-                console.log($(".commentInput").val());
+                //console.log($(".commentInput").val());
+                $(".commentInput").val("");
+
+            });
+
+    });
+
+    $(document).on("click", ".viewAllComments", function (event) {
+        event.preventDefault();
+
+        let thisID = $(this).attr("data-id");
+
+        $.ajax({
+            method: "GET",
+            url: "/comments/" + thisID
+        })
+            // With that done
+            .then(function (data) {
+                //console.log(data["0"].comments);
+                fillComments(data);
             });
 
     })
+
+    function getComments(event) {
+
+    }
+
+    function fillComments(data) {
+        $(".comment").empty();
+        $(".comment").append(`<h4>Comments:</h4>`)
+        data["0"].comments.forEach(comment => {
+            console.log(comment.body);
+            $(".comment").append(`<p>${comment.body}</p>`);
+        });
+        $(".comment").css("display", "block");
+    }
 
 </script>
