@@ -1,19 +1,93 @@
 <div class="wrapper">
     {{#each articles}}
-    <h2><a href="{{link}}">{{title}}</a></h2>
-    <p>{{summary}}</p>
-    <hr />
+
+    <div class="articleBox" data-id="{{_id}}">
+        <a href="{{link}}"><img src="{{img}}" /></a>
+        <h2><a href="{{link}}">{{title}}</a></h2>
+        <p>{{summary}}</p>
+        <button class="commentButton" data-id="{{_id}}">Leave a Comment</button>
+    </div>
+    <br>
     {{/each}}
 
-    <style>
-        a {
-            text-decoration: none;
-            color: black;
-        }
 
-        .wrapper {
-            padding: 20px 50px 20px 50px;
-            width: 50%;
-        }
-    </style>
 </div>
+<div class="comment">
+</div>
+
+<style>
+    a {
+        text-decoration: none;
+        color: black;
+    }
+
+    .wrapper {
+
+        width: 942px;
+        display: flex;
+        flex-wrap: wrap;
+        border-width: 1px 1px 0px 0px;
+        border-color: black;
+        border-style: solid;
+        float: left;
+    }
+
+    .articleBox {
+        width: 450px;
+        border-width: 0px 0px 1px 1px;
+        border-color: black;
+        border-style: solid;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .comment {
+        float: left;
+        display: none;
+        width: 350px;
+        margin-left: 50px;
+    }
+</style>
+
+<script src='https://code.jquery.com/jquery-3.3.1.min.js' integrity='sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8='
+    crossorigin='anonymous'></script>
+
+<script>
+    $(".commentButton").on("click", function (event) {
+        event.preventDefault();
+
+        $(".comment").empty();
+
+        $(".comment").append(`<h4>Leave a Comment</h4>`);
+        $(".comment").append(`<form>`);
+        $(".comment").append(`<input class="commentInput"/>`);
+        $(".comment").append(`<button class="submitButton" data-id="${$(this).attr("data-id")}">Submit</button>`);
+        $(".comment").append(`</form>`);
+
+        $(".comment").css("display", "block");
+        console.log($(this).attr("data-id").trim());
+    });
+
+    $(document).on("click", ".submitButton", function (event) {
+        event.preventDefault();
+
+        let thisID = $(this).attr("data-id");
+
+        $.ajax({
+            method: "POST",
+            url: "/articles",
+            data: {
+                comment: {
+                    body: $(".commentInput").val()
+                },
+                id: thisID
+            }
+        })
+            // With that done
+            .then(function (data) {
+                console.log($(".commentInput").val());
+            });
+
+    })
+
+</script>
