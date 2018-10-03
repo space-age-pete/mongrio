@@ -20,7 +20,11 @@ app.use(express.json());
 
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost/mongrio", { useNewUrlParser: true });
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+mongoose.Promise = Promise;
+mongoose.connect(MONGODB_URI);
+
+//mongoose.connect("mongodb://localhost/mongrio", { useNewUrlParser: true });
 
 app.get("/scrape", function (req, res) {
     axios.get("https://www.jacobinmag.com/").then(function (response) {
